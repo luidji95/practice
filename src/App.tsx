@@ -1,55 +1,35 @@
 import { useState } from "react";
-import ListaRadnika from "./ListaRadnika";
-import { v4 as uuidv4 } from "uuid"; // Za generisanje ID-a
 
-const initialEmployee = {
-  id: uuidv4(),
-  ime: "Milan",
-  prezime: "Jovanović",
-  titula: "CEO",
-  plata: 1000,
-  zaposleni: [],
-};
+const proizvodi = [
+  { id: 1, naziv: "Hleb", cena: 50, dostupan: true },
+  { id: 2, naziv: "Mleko", cena: 80, dostupan: false },
+  { id: 3, naziv: "Sir", cena: 120, dostupan: true },
+  { id: 4, naziv: "Jaja", cena: 100, dostupan: true },
+];
 
 function App() {
-  const [firma, setFirma] = useState(initialEmployee);
+  const [artikli, setArtikli] = useState(proizvodi);
+  console.log(artikli);
 
-  const dodajZaposlenog = (parentId) => {
-    const dodaj = (zaposleni) => {
-      if (zaposleni.id === parentId) {
-        const novi = {
-          id: uuidv4(),
-          ime: `Novi${Math.floor(Math.random() * 1000)}`,
-          prezime: "Zaposleni",
-          titula: "Developer",
-          plata: zaposleni.plata + 1000,
-          zaposleni: [],
-        };
-        return { ...zaposleni, zaposleni: [...zaposleni.zaposleni, novi] };
-      }
-      return {
-        ...zaposleni,
-        zaposleni: zaposleni.zaposleni.map(dodaj),
-      };
-    };
-    setFirma((prev) => dodaj(prev));
-  };
+  const prikaziDostupneArtikle = () => {
+    const dostupniArtikli = artikli
+      .filter((artikl) => artikl.dostupan)
+      .map((artikl) => ({ ...artikl, cena: artikl.cena * 1.1 }));
 
-  const izracunajUkupnuPlatu = (zaposleni) => {
-    return (
-      zaposleni.plata +
-      zaposleni.zaposleni.reduce((sum, z) => sum + izracunajUkupnuPlatu(z), 0)
-    );
+    setArtikli(dostupniArtikli);
   };
 
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
-      <h2>Hijerarhija zaposlenih</h2>
-      <ListaRadnika radnik={firma} onDodaj={dodajZaposlenog} />
-      <hr />
-      <p>
-        <strong>Ukupna plata:</strong> {izracunajUkupnuPlatu(firma)}
-      </p>
+    <div>
+      <h2>Hello</h2>
+      {artikli.map((item) => (
+        <p key={item.id}>
+          {item.naziv} - {item.cena}
+        </p>
+      ))}
+      <button onClick={() => prikaziDostupneArtikle()}>
+        Prikazi dosutpne artikle
+      </button>
     </div>
   );
 }
