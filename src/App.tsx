@@ -1,35 +1,34 @@
 import { useState } from "react";
 
-const proizvodi = [
-  { id: 1, naziv: "Hleb", cena: 50, dostupan: true },
-  { id: 2, naziv: "Mleko", cena: 80, dostupan: false },
-  { id: 3, naziv: "Sir", cena: 120, dostupan: true },
-  { id: 4, naziv: "Jaja", cena: 100, dostupan: true },
+const studenti = [
+  { id: 1, ime: "Ana", ocena: 8 },
+  { id: 2, ime: "Marko", ocena: 5 },
+  { id: 3, ime: "Luka", ocena: 9 },
+  { id: 4, ime: "Mina", ocena: 6 },
+  { id: 5, ime: "Ivana", ocena: 4 },
 ];
 
 function App() {
-  const [artikli, setArtikli] = useState(proizvodi);
-  console.log(artikli);
+  const [djaci, setDjaci] = useState(studenti);
+  const [prosecnaOcena, setProsecnaOcena] = useState(0);
 
-  const prikaziDostupneArtikle = () => {
-    const dostupniArtikli = artikli
-      .filter((artikl) => artikl.dostupan)
-      .map((artikl) => ({ ...artikl, cena: artikl.cena * 1.1 }));
+  const noviDjaci = djaci.filter((caci) => caci.ocena >= 6);
 
-    setArtikli(dostupniArtikli);
+  const prosecnaOcenaPolozenih = () => {
+    setProsecnaOcena(
+      noviDjaci.reduce((acc, caci) => acc + caci.ocena, 0) / noviDjaci.length
+    );
   };
-
   return (
     <div>
       <h2>Hello</h2>
-      {artikli.map((item) => (
-        <p key={item.id}>
-          {item.naziv} - {item.cena}
+      {djaci.map((caci) => (
+        <p key={caci.id}>
+          {caci.ime} - {caci.ocena}
         </p>
       ))}
-      <button onClick={() => prikaziDostupneArtikle()}>
-        Prikazi dosutpne artikle
-      </button>
+      <button onClick={() => prosecnaOcenaPolozenih()}>Klik</button>
+      <p>Prosecna ocena studenata koji su polozili je : {prosecnaOcena}</p>
     </div>
   );
 }
